@@ -1,0 +1,103 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>后台管理</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <style>
+        .information{
+            width: 500px;
+            height: 80px;
+            overflow-y: auto;
+            line-height: 24px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="common :: header"></div>
+<div class="container clearfix">
+    <div th:replace="common :: leftmenu"></div>
+    <!--/sidebar-->
+    <div class="main-wrap">
+
+        <div class="crumb-wrap">
+            <div class="crumb-list"><i class="icon-font"></i><a href="index.html">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">图书管理</span></div>
+        </div>
+        <div class="search-wrap">
+            <div class="search-content">
+                <form action="#" method="post">
+                    <table class="search-tab">
+                        <tr>
+                            <th width="70">关键字:</th>
+                            <td><input class="common-text" placeholder="关键字" name="keywords" value="" id="" type="text"></td>
+                            <td><input class="btn btn-primary btn2" name="sub" value="查询" type="submit"></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="result-wrap">
+            <form name="myform" id="myform" method="post">
+                <div class="result-title">
+                    <div class="result-list">
+                        <a href="insert.html"><i class="icon-font"></i>新增图书</a>
+                        <a id="batchDel" href="javascript:void(0)"><i class="icon-font"></i>批量删除</a>
+                        <a id="updateOrd" href="#"><i class="icon-font"></i>刷新</a>
+                    </div>
+                </div>
+                <div class="result-content">
+                    <table class="result-tab" width="100%">
+                        <tr>
+                            <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
+                            <th>歌手图像</th>
+                            <th>姓名</th>
+                            <th>性别</th>
+                            <th>生日</th>
+                            <th>地区</th>
+                            <th>简介</th>
+                            <th>操作</th>
+                        </tr>
+                        <tr th:each="singer : ${resultPage.content}">
+                            <td class="tc"><input name="id[]" value="59" type="checkbox"></td>
+                            <td align="center">
+                                <img style="width: 80px; height: 80px;" th:src="@{http://localhost:8888/img/singerPic/fff.jpg}" alt="图片加载失败">
+                            </td>
+                            <td align="center" th:text="${singer.singerName}">59</td>
+                            <td align="center">
+                                <div th:if="${singer.gender eq 0}">男</div>
+                                <div th:if="${singer.gender eq 1}">女</div>
+                                <div th:if="${singer.gender eq 2}">组合</div>
+                                <div th:if="${singer.gender eq 3}">保密</div>
+                            </td>
+                            <td align="center" th:text="${singer.birth}">2001-9-8</td>
+                            <td align="center" th:text="${singer.location}">上海</td>
+                            <td style="width: 500px; height: 80px;">
+                                <div class="information" th:text="${singer.information}">
+                                    dkwahd dwaiudh 等候i啊哇好多等会我阿德厚度挖坑的的海外u会对哇对比u哇会对哇会丢哇的会对哇好的的海外u的话
+                                    都会哇都会哇偶i的都会哇和会对哇好的和对啊我对啊五花大绑的海外u的话
+                                </div>
+                            </td>
+                            <td>
+                                <a class="link-update" href="#">修改</a>
+                                <a class="link-del" href="#">删除</a>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="list-page">
+                        <a href="">首页</a>
+                        <a href="">上一页</a>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        共[[${resultPage.totalSize}]]条记录,当前第[[${resultPage.pageNum}]]/[[${resultPage.totalPages}]]页
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <a href="">下一页</a>
+                        <a href="">尾页</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--/main-->
+</div>
+</body>
+</html>
