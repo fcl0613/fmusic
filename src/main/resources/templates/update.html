@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all">
+    <style>
+        .f{
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="f">
+    <form class="layui-form" action="" th:object="${singer}">
+        <input type="hidden" th:field="*{singerId}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">歌手姓名</label>
+            <div class="layui-input-block">
+                <input type="text" th:field="*{singerName}" required="required"  lay-verify="required" placeholder="请输入歌手姓名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">单选框</label>
+            <div class="layui-input-block">
+                <input type="radio" th:field="*{gender}" value="0" title="男">
+                <input type="radio" th:field="*{gender}" value="1" title="女">
+                <input type="radio" th:field="*{gender}" value="2" title="组合">
+                <input type="radio" th:field="*{gender}" value="3" title="保密">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出生日期</label>
+            <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+                <input type="text" th:field="*{birth}" class="layui-input" id="test1" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">城市：</label>
+            <div class="layui-input-block">
+                <input type="text" th:field="*{location}" required="required"  lay-verify="required" placeholder="请输入城市" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">歌手简介</label>
+            <div class="layui-input-block">
+                <textarea th:field="*{information}" lay-verify="required" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button id="btn-submit" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+    layui.use(['laydate','form'], function(){
+        var laydate = layui.laydate;
+        var form = layui.form;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#test1' //指定元素
+        });
+        form.on('submit(formDemo)', function(data){
+            $("#btn-submit").attr('disabled','disabled').addClass("layui-btn-disabled")
+            //异步请求提交表单
+            var url = '/singer/update'
+            $.post(url,data.field,function(response){
+                if (response.code == 200){
+                    //提示成功
+                    layer.msg(response.message,{icon:1,time:500},function () {
+                        //关闭添加窗口
+                        //刷新表歌数据
+                        parent.refresh()
+                        //当你在iframe页面关闭自身时
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    })
+                }else{
+                    //提示失败
+                    //不关闭窗口
+                    layer.msg(response.message,{icon:2,time:1000,anim:6})
+                    $("#btn-submit").removeClass("layui-btn-disabled").removeAttr('disabled','disabled')
+                }
+            })
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+</body>
+</html>

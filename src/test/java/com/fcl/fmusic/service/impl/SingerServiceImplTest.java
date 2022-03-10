@@ -15,6 +15,6 @@ class SingerServiceImplTest {
     SingerService singerService;
     @Test
     void selectPage(){
-        System.out.println(singerService.selectPage(1,2));
+//        System.out.println(singerService.selectPage(1,2));
     }
 }

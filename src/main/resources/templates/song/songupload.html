@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all">
+    <style>
+        .f{
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="f">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">歌曲名</label>
+            <div class="layui-input-block">
+                <input type="text" id="songName" name="songName" required  lay-verify="required" placeholder="请输入歌曲名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">专辑</label>
+            <div class="layui-input-block">
+                <input type="text" id="information" name="information" lay-verify="required" placeholder="请输入专辑" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">歌词</label>
+            <div class="layui-input-block">
+                <textarea name="lyrics" id="lyrics" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <input type="text" id="singerId" name="singerId" hidden="hidden" th:value="${singerId}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">音频文件</label>
+            <div class="layui-input-block">
+                <input type="file" accept=".mp3" name="file" id="fileAudio" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button id="btn-submit" class="layui-btn lay-submit" lay-filter="formDemo" onclick="return false">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form','upload','jquery'], function(){
+        var $ = layui.jquery;
+        var upload = layui.upload;
+        upload.render({
+            elem: '#fileAudio' //绑定元素
+            ,url: '/song/add' //上传接口
+            ,accept:'audio'
+            ,exts:'wav|mp3|ogg|webm'
+            ,multiple: true
+            ,auto:false
+            ,bindAction:'#btn-submit'
+            ,before: function () {
+                this.data = {
+                    singerId: $("#singerId").val(),
+                    songName:$("#songName").val(),
+                    information:$("#information").val(),
+                    lyrics:$("#lyrics").val()
+                }
+                // console.log(this.data)
+            }
+            ,done: function(res, index, upload){
+                $("#btn-submit").attr('disabled','disabled').addClass("layui-btn-disabled")
+                if("200" == res.code) {
+                    layer.msg(res.message,{icon:1,time:500},function () {
+                        //关闭添加窗口
+                        //刷新表歌数据
+                        parent.refresh()
+                        //当你在iframe页面关闭自身时
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    })
+                } else {
+                    //提示失败
+                    //不关闭窗口
+                    layer.msg("添加失败",{icon:2,time:1000,anim:6})
+                    $("#btn-submit").removeClass("layui-btn-disabled").removeAttr('disabled','disabled')
+                }
+                //上传完毕回调
+            }
+            ,error: function(index, upload){
+            }
+        });
+    });
+</script>
+</body>
+</html>

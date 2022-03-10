@@ -10,5 +10,21 @@ spring:
   mvc:
     format:
       date: yyyy-mm-dd
+    hiddenmethod:
+      filter:
+        enabled: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 80MB
+  thymeleaf:
+    encoding: UTF-8
+    cache: false
 server:
   port: 8888
+  tomcat:
+    uri-encoding: UTF-8
+
+logging:
+  level:
+    com.fcl.fmusic.mapper: DEBUG

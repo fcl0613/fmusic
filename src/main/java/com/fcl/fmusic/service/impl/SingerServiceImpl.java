@@ -26,12 +26,17 @@ public class SingerServiceImpl implements SingerService {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         return singerMapper.delete(id) > 0;
     }
 
     @Override
-    public Singer selectById(Long id) {
+    public boolean deleteByIds(List<Integer> ids) {
+        return singerMapper.deleteByIds(ids) > 0;
+    }
+
+    @Override
+    public Singer selectById(Integer id) {
         return singerMapper.selectById(id);
     }
 
@@ -41,19 +46,9 @@ public class SingerServiceImpl implements SingerService {
     }
 
     @Override
-    public List<Singer> selectSingerByName(String singerName) {
-        return singerMapper.selectSingerByName(singerName);
-    }
-
-    @Override
-    public List<Singer> selectSingerByGender(Integer gender) {
-        return singerMapper.selectSingerByGender(gender);
-    }
-
-    @Override
-    public PageInfo<Singer> selectPage(Integer pageNum, Integer pageSize) {
+    public PageInfo<Singer> selectPage(Integer pageNum, Integer pageSize, String keyword, Byte gender) {
         PageHelper.startPage(pageNum,pageSize);
-        List<Singer> singerList = singerMapper.selectPage();
+        List<Singer> singerList = singerMapper.selectPage("%"+keyword+"%",gender);
         PageInfo<Singer> pageInfo = new PageInfo<>(singerList);
         return pageInfo;
     }

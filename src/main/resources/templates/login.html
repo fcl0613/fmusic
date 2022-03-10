@@ -1,34 +1,114 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>音乐后台管理系统</title>
-	<link rel="stylesheet" type="text/css" href="css/admin_login.css"/>
+    <meta charset="UTF-8">
+    <title>后台管理-登陆</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.6.3/css/layui.css}" media="all">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        #container{height:100%;width:100%;}
+        input:-webkit-autofill {-webkit-box-shadow:inset 0 0 0 1000px #fff;background-color:transparent;}
+        .admin-login-background {width:300px;height:300px;position:absolute;left:50%;top:40%;margin-left:-150px;margin-top:-100px;}
+        .admin-header {text-align:center;margin-bottom:20px;color:#ffffff;font-weight:bold;font-size:40px}
+        .admin-input {border-top-style:none;border-right-style:solid;border-bottom-style:solid;border-left-style:solid;height:50px;width:300px;padding-bottom:0px;}
+        .admin-input::-webkit-input-placeholder {color:#a78369}
+        .layui-icon-username {color:#a78369 !important;}
+        .layui-icon-username:hover {color:#9dadce !important;}
+        .layui-icon-password {color:#a78369 !important;}
+        .layui-icon-password:hover {color:#9dadce !important;}
+        .admin-input-username {border-top-style:solid;border-radius:10px 10px 0 0;}
+        .admin-input-verify {border-radius:0 0 10px 10px;}
+        .admin-button {margin-top:20px;font-weight:bold;font-size:18px;width:300px;height:50px;border-radius:5px;background-color:#a78369;border:1px solid #d8b29f}
+        .admin-icon {margin-left:260px;margin-top:10px;font-size:30px;}
+        i {position:absolute;}
+        .admin-captcha {position:absolute;margin-left:205px;margin-top:-40px;}
+        #captcha{cursor: pointer}
+    </style>
 </head>
-<body>
-<div class="admin_login_wrap">
-    <h1>后台管理</h1>
-    <div class="adming_login_border">
-        <div class="admin_input">
-            <label style="color: red" th:text="${msg}"></label>
-            <form th:action="@{/login}" th:method="post">
-                <ul class="admin_items">
-                    <li>
-                        <label for="user">用户名：</label>
-                        <input type="text" name="username" value="admin" id="user" size="40" class="admin_input_style" />
-                    </li>
-                    <li>
-                        <label for="pwd">密码：</label>
-                        <input type="password" name="pwd" value="admin" id="pwd" size="40" class="admin_input_style" />
-                    </li>
-                    <li>
-                        <input type="submit" tabindex="3" value="提交" class="btn btn-primary" />
-                    </li>
-                </ul>
-            </form>
+<body th:style="'background-image:url(/images/bg.jpg);height:100%;width:100%;'">
+<div id="container">
+    <div></div>
+    <div class="admin-login-background">
+        <div class="admin-header">
+            <span>layuimini</span>
         </div>
+        <form class="layui-form" action="">
+            <div>
+                <i class="layui-icon layui-icon-username admin-icon"></i>
+                <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input admin-input admin-input-username" value="admin">
+            </div>
+            <div>
+                <i class="layui-icon layui-icon-password admin-icon"></i>
+                <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input admin-input" value="123456">
+            </div>
+            <div>
+                <input type="text" name="captcha" placeholder="请输入验证码" autocomplete="off" class="layui-input admin-input admin-input-verify" value="">
+                <img id="captcha" class="admin-captcha" width="90" height="30" th:src="@{/captcha}" />
+            </div>
+            <button id="btn-login" class="layui-btn admin-button" lay-submit="" lay-filter="login">登 陆</button>
+        </form>
     </div>
-    <p class="admin_copyright"> &copy; 2014 Powered by salted fish</a></p>
 </div>
+<script th:src="@{/lib/layui-v2.6.3/layui.js}" charset="utf-8"></script>
+<script th:src="@{/js/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script th:inline="javascript">
+    let contextPath = [[@{/}]];
+
+    $("#captcha").click(function () {
+        $("#captcha").attr("src",contextPath+'captcha?data='+new Date().getTime())
+    });
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer;
+
+        // 登录过期的时候，跳出ifram框架
+        if (top.location != self.location) top.location = self.location;
+
+        // 进行登录操作
+        form.on('submit(login)', function (data) {
+            $("#btn-login").attr('disabled','disabled').addClass("layui-btn-disabled")
+            data = data.field;
+            if (data.username == '') {
+                layer.msg('用户名不能为空');
+                $("#btn-login").removeClass("layui-btn-disabled").removeAttr('disabled','disabled')
+                return false;
+            }
+            if (data.password == '') {
+                layer.msg('密码不能为空');
+                $("#btn-login").removeClass("layui-btn-disabled").removeAttr('disabled','disabled')
+                return false;
+            }
+            if (data.captcha == '') {
+                layer.msg('验证码不能为空');
+                $("#btn-login").removeClass("layui-btn-disabled").removeAttr('disabled','disabled')
+                return false;
+            }
+            //异步登录请求
+            let url = contextPath+'login'
+            $.post(url,data,function(response){
+                if(response.code === 200){
+                    layer.msg('登录成功',{icon: 6,time:1000}, function () {
+                       console.log(response)
+                        window.location = '/index.html';
+                    });
+                }else{
+                    layer.msg(response.message, {icon: 5,time:1000,anim: 6});
+                    $("#btn-login").removeClass("layui-btn-disabled").removeAttr('disabled','disabled')
+                    $("#captcha").attr("src",contextPath+'captcha?data='+new Date().getTime())
+                }
+            })
+            return false;
+        });
+    });
+</script>
 </body>
 </html>

@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 歌手
@@ -12,7 +11,7 @@ import java.util.Date;
 @Data
 @ToString
 public class Singer implements Serializable {
-    private Long id;
+    private Integer singerId;
     private String singerName;
     private Byte gender;        //0:男1:女2:组合3:保密
     private String pic;     //头像

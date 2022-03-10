@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.fmusic.mapper.SongMapper">
+    <resultMap id="BASE_RESULT_MAP" type="com.fcl.fmusic.entity.Song">
+        <id column="id" jdbcType="INTEGER" property="songId"></id>
+        <result column="song_name" jdbcType="VARCHAR" property="songName"></result>
+        <result column="singer_id" jdbcType="INTEGER" property="singerId"></result>
+        <result column="information" jdbcType="VARCHAR" property="information"></result>
+        <result column="creat_time" jdbcType="DATE" property="creatTime"></result>
+        <result column="update_time" jdbcType="DATE" property="updateTime"></result>
+        <result column="pic" jdbcType="VARCHAR" property="pic"></result>
+        <result column="url" jdbcType="VARCHAR" property="url"></result>
+    </resultMap>
+    
+    <resultMap id="RESULT_MAP_WITH_LYRIC" type="com.fcl.fmusic.entity.Song" extends="BASE_RESULT_MAP">
+        <result column="lyrics" jdbcType="LONGVARCHAR" property="lyrics"></result>
+    </resultMap>
+
+    <sql id="BASE_COMMON_LIST">
+        id,song_name,singer_id,information,creat_time,update_time,pic,url
+    </sql>
+    
+    <sql id="BASE_LYRICS">
+        id,song_name,singer_id,information,creat_time,update_time,pic,lyrics,url
+    </sql>
+
+    <insert id="insert" parameterType="com.fcl.fmusic.entity.Song">
+        insert into song
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="songId != null">
+                id,
+            </if>
+            <if test="songName != null">
+                song_name,
+            </if>
+            <if test="singerId != null">
+                singer_id,
+            </if>
+            <if test="information != null">
+                information,
+            </if>
+            creat_time,update_time,
+            <if test="pic != null">
+                pic,
+            </if>
+            <if test="lyrics != null">
+                lyrics,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="songId != null">
+                #{songId},
+            </if>
+            <if test="songName != null">
+                #{songName},
+            </if>
+            <if test="singerId != null">
+                #{singerId},
+            </if>
+            <if test="information != null">
+                #{information},
+            </if>
+            now(),now(),
+            <if test="pic != null">
+                #{pic},
+            </if>
+            <if test="lyrics != null">
+                #{lyrics},
+            </if>
+            <if test="url != null">
+                #{url},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.fcl.fmusic.entity.Song">
+        update song
+        <set>
+            <if test="songName!=null and songName!=''">
+                song_name = #{songName},
+            </if>
+            <if test="information!=null and information!=''">
+                information = #{information},
+            </if>
+            <if test="pic!=null and pic!=''">
+                pic = #{pic},
+            </if>
+            <if test="lyrics!=null and lyrics!=''">
+                lyrics = #{lyrics},
+            </if>
+            <if test="url!=null and url!=''">
+                url = #{url},
+            </if>
+            update_time = now()
+        </set>
+        where id = #{songId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from song where id=#{id}
+    </delete>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="RESULT_MAP_WITH_LYRIC">
+        select
+        <include refid="BASE_LYRICS"></include>
+        from song
+        where id = #{id}
+    </select>
+
+    <select id="selectPage" resultMap="RESULT_MAP_WITH_LYRIC">
+        select
+        <include refid="BASE_LYRICS"></include>
+        from song
+        <where>
+            <if test="singerId!=null">
+                singer_id=#{singerId}
+            </if>
+            <if test="songName!=null and songName!='' and songName.length() &gt; 2">
+                and song_name like #{songName}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByIds" parameterType="java.util.ArrayList">
+        delete from song where id in
+        <foreach collection="list" item="id"  separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAll" resultMap="RESULT_MAP_WITH_LYRIC">
+        select
+        <include refid="BASE_LYRICS"></include>
+        from song
+        <where>
+            <if test="singerName!=null and singerName!='' and singerName.length() &gt; 2">
+                song.singer_name in (select singer.id from singer where singer_name like #{singerName})
+            </if>
+            <if test="songName!=null and songName!='' and songName.length() &gt; 2">
+                and song_name like #{songName}
+            </if>
+        </where>
+    </select>
+</mapper>

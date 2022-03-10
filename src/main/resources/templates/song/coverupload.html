@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>头像上传</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all">
+</head>
+<style>
+    .dd{
+        vertical-align: middle;
+        /*水平居中*/
+        text-align: center;
+    }
+</style>
+<body>
+<div class="dd">
+    <img id="headPic" th:src="@{${img}}" width="60px" height="60px" class="layui-circle"/>
+    <br>
+    <br>
+    <button type="button" class="layui-btn" id="test1">
+        <i class="layui-icon">&#xe67c;</i>上传图片
+    </button>
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script>
+    layui.use(['upload','layer'], function(){
+        var upload = layui.upload;
+        var layer = layui.layer;
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#test1' //绑定元素
+            ,url: '/song/updatecover?id=[[${songId}]]' //上传接口
+            ,done: function(res){
+                //上传完毕回调
+                if (res.code == 200) {
+                    layer.msg(res.message, {icon: 1,time: 1000},function () {
+                        parent.refresh()
+                        //当你在iframe页面关闭自身时
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    })
+                }else{
+                    layer.msg(res.message, {icon: 2, time: 1000, anim:6})
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -11,10 +11,9 @@ import java.util.List;
 public interface SingerMapper {
     public int insert(Singer singer);
     public int update(Singer singer);
-    public int delete(Long id);
-    public Singer selectById(Long id);
+    public int delete(Integer singerId);
+    public int deleteByIds(List<Integer> ids);
+    public Singer selectById(Integer singerId);
     public List<Singer> selectAllSinger();
-    public List<Singer> selectSingerByName(String singerName);
-    public List<Singer> selectSingerByGender(Integer gender);
-    public List<Singer> selectPage();
+    public List<Singer> selectPage(String singerName,Byte gender);
 }
