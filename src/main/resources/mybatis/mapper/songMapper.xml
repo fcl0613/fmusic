@@ -18,12 +18,26 @@
         <result column="lyrics" jdbcType="LONGVARCHAR" property="lyrics"></result>
     </resultMap>
 
+    <resultMap id="SONG_VO" type="com.fcl.fmusic.vo.SongVo">
+        <id column="song_id" jdbcType="INTEGER" property="songId"></id>
+        <result column="song_name" jdbcType="VARCHAR" property="songName"></result>
+        <result column="singer_name" jdbcType="INTEGER" property="singerName"></result>
+        <result column="song_information" jdbcType="VARCHAR" property="information"></result>
+        <result column="song_pic" jdbcType="VARCHAR" property="pic"></result>
+        <result column="lyrics" jdbcType="LONGVARCHAR" property="lyrics"></result>
+        <result column="song_url" jdbcType="VARCHAR" property="url"></result>
+    </resultMap>
+
     <sql id="BASE_COMMON_LIST">
         id,song_name,singer_id,information,creat_time,update_time,pic,url
     </sql>
     
     <sql id="BASE_LYRICS">
         id,song_name,singer_id,information,creat_time,update_time,pic,lyrics,url
+    </sql>
+
+    <sql id="BASE_SINGERNAME">
+        song.id as song_id,song_name,singer_name,song.information as song_information,song.pic as song_pic,lyrics,song.url as song_url
     </sql>
 
     <insert id="insert" parameterType="com.fcl.fmusic.entity.Song">
@@ -134,10 +148,10 @@
         </foreach>
     </delete>
 
-    <select id="selectAll" resultMap="RESULT_MAP_WITH_LYRIC">
+    <select id="selectAll" resultMap="SONG_VO">
         select
-        <include refid="BASE_LYRICS"></include>
-        from song
+        <include refid="BASE_SINGERNAME"></include>
+        from song left join singer on song.singer_id = singer.id
         <where>
             <if test="singerName!=null and singerName!='' and singerName.length() &gt; 2">
                 song.singer_name in (select singer.id from singer where singer_name like #{singerName})

@@ -1,9 +1,11 @@
 package com.fcl.fmusic.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fcl.fmusic.entity.Song;
 import com.fcl.fmusic.service.SongService;
 import com.fcl.fmusic.utils.FileUpload;
 import com.fcl.fmusic.vo.Result;
+import com.fcl.fmusic.vo.SongVo;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,17 @@ import java.util.List;
 public class SongController {
     @Autowired
     SongService songService;
+
+    @GetMapping("/singer/detail")
+    @ResponseBody
+    public JSONObject getSongBySingerId(@RequestParam("singerId") Integer id,
+                                        @RequestParam(value = "page",defaultValue = "1") int page,
+                                        @RequestParam(value = "limit", defaultValue = "10") int limit){
+        JSONObject jsonObject = new JSONObject();
+        PageInfo<Song> pageInfo = songService.selectPage(page, limit, "", id);
+        jsonObject.put("song",pageInfo.getList());
+        return jsonObject;
+    }
 
     @PostMapping("/updatecover")
     @ResponseBody
@@ -152,8 +165,8 @@ public class SongController {
                                      @RequestParam(value = "limit", defaultValue = "10") int limit,
                                      @RequestParam(value = "singername", defaultValue = "") String singerName,
                                      @RequestParam(value = "songname", defaultValue = "") String songName){
-        PageInfo<Song> pageInfo = songService.selectAll(page, limit, songName, singerName);
-        List<Song> list = pageInfo.getList();
+        PageInfo<SongVo> pageInfo = songService.selectAll(page, limit, songName, singerName);
+        List<SongVo> list = pageInfo.getList();
         long total = pageInfo.getTotal();
         return Result.success(list,total);
     }

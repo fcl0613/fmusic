@@ -13,6 +13,16 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  mail:
+    protocol: smtp #邮件协议
+    host: smtp.163.com
+    port: 25
+    username: fancl0613@163.com
+    password: OYZEVHITFQTVXLFZ
+    default-encoding: UTF-8
+    properties:
+      mail:
+        debug: true #开启邮件发送过程日志
   servlet:
     multipart:
       max-file-size: 20MB

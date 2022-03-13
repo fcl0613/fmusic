@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.fmusic.mapper.UserMapper">
+    <resultMap id="BASE_RESULT" type="com.fcl.fmusic.entity.User">
+        <id column="id" jdbcType="INTEGER" property="userId"></id>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"></result>
+        <result column="password" jdbcType="VARCHAR" property="password"></result>
+        <result column="salt" jdbcType="VARCHAR" property="salt"></result>
+        <result column="gender" jdbcType="TINYINT" property="gender"></result>
+        <result column="phone_num" jdbcType="VARCHAR" property="phoneNum"></result>
+        <result column="email" jdbcType="VARCHAR" property="email"></result>
+        <result column="birth" jdbcType="VARCHAR" property="birth"></result>
+        <result column="signature" jdbcType="VARCHAR" property="signature"></result>
+        <result column="location" jdbcType="VARCHAR" property="location"></result>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"></result>
+        <result column="creat_time" jdbcType="DATE" property="creatTime"></result>
+        <result column="update_time" jdbcType="DATE" property="updateTime"></result>
+        <result column="activation_time" jdbcType="DATE" property="activationTime"></result>
+        <result column="is_valid" jdbcType="TINYINT" property="isValid"></result>
+        <result column="confirm_code" jdbcType="DATE" property="confirmCode"></result>
+    </resultMap>
+
+    <resultMap id="USER_VO_ADMIN" type="com.fcl.fmusic.entity.User">
+        <id column="id" jdbcType="INTEGER" property="userId"></id>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"></result>
+        <result column="gender" jdbcType="TINYINT" property="gender"></result>
+        <result column="phone_num" jdbcType="VARCHAR" property="phoneNum"></result>
+        <result column="email" jdbcType="VARCHAR" property="email"></result>
+        <result column="birth" jdbcType="VARCHAR" property="birth"></result>
+        <result column="signature" jdbcType="VARCHAR" property="signature"></result>
+        <result column="location" jdbcType="VARCHAR" property="location"></result>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"></result>
+    </resultMap>
+
+    <sql id="BASE_SELECT">
+        id,user_name,password,salt,gender,phone_num,email,birth,signature,location,avatar,creat_time,update_time,activation_time,is_valid,confirm_code
+    </sql>
+
+    <insert id="insert" parameterType="com.fcl.fmusic.entity.User">
+        insert into users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="phoneNum != null">
+                phone_num,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="birth != null">
+                birth,
+            </if>
+            <if test="signature != null">
+                signature,
+            </if>
+            <if test="location != null">
+                location,
+            </if>
+            <if test="avatar != null">
+                avatar,
+            </if>
+            creat_time,update_time,
+            <if test="activationTime != null">
+                activation_time,
+            </if>
+            <if test="isValid != null">
+                is_valid,
+            </if>
+            <if test="confirmCode != null">
+                confirm_code,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="userName != null">
+                #{userName},
+            </if>
+            <if test="password != null">
+                #{password},
+            </if>
+            <if test="salt != null">
+                #{salt},
+            </if>
+            <if test="gender != null">
+                #{gender},
+            </if>
+            <if test="phoneNum != null">
+                #{phoneNum},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="birth != null">
+                #{birth},
+            </if>
+            <if test="signature != null">
+                #{signature},
+            </if>
+            <if test="location != null">
+                #{location},
+            </if>
+            <if test="avatar != null">
+                #{avatar},
+            </if>
+            now(),now(),
+            <if test="activationTime != null">
+                #{activationTime},
+            </if>
+            <if test="isValid != null">
+                #{isValid},
+            </if>
+            <if test="confirmCode != null">
+                #{confirmCode},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.fcl.fmusic.entity.User">
+        update users
+        <set>
+            <if test="userName != null">
+                user_name=#{userName},
+            </if>
+            <if test="password != null">
+                password=#{password},
+            </if>
+            <if test="salt != null">
+                salt=#{salt},
+            </if>
+            <if test="gender != null">
+                gender=#{gender},
+            </if>
+            <if test="phoneNum != null">
+                phone_num=#{phoneNum},
+            </if>
+            <if test="email != null">
+                email=#{email},
+            </if>
+            <if test="birth != null">
+                birth=#{birth},
+            </if>
+            <if test="signature != null">
+                signature=#{signature},
+            </if>
+            <if test="location != null">
+                location=#{location},
+            </if>
+            <if test="avatar != null">
+                avatar=#{avatar},
+            </if>
+            update_time=now(),
+            <if test="activationTime != null">
+                activation_time=#{activationTime},
+            </if>
+            <if test="isValid != null">
+                is_valid=#{isValid},
+            </if>
+            <if test="confirmCode != null">
+                confirm_code=#{confirmCode},
+            </if>
+        </set>
+        where id=#{userId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from users where id=#{id}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="java.util.ArrayList">
+        delete from users where id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectUserById" resultMap="BASE_RESULT" parameterType="java.lang.Integer">
+        select
+        <include refid="BASE_SELECT"></include>
+        from users
+        where id=#{id}
+    </select>
+
+    <select id="selectPage" resultMap="BASE_RESULT">
+        select
+        <include refid="BASE_SELECT"></include>
+        from users
+        <if test="userName.length() &gt; 2">
+            where user_name like #{userName}
+        </if>
+    </select>
+</mapper>

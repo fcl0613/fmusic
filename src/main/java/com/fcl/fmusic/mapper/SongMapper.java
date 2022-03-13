@@ -1,6 +1,7 @@
 package com.fcl.fmusic.mapper;
 
 import com.fcl.fmusic.entity.Song;
+import com.fcl.fmusic.vo.SongVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -16,5 +17,5 @@ public interface SongMapper {
     public int deleteByIds(List list);
     public Song selectById(Integer id);
     public List<Song> selectPage(@Param("songName") String songName, @Param("singerId") Integer singerId);
-    public List<Song> selectAll(@Param("songName") String songName, @Param("singerName") String singerName);
+    public List<SongVo> selectAll(@Param("songName") String songName, @Param("singerName") String singerName);
 }

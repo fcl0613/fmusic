@@ -35,7 +35,7 @@
             },
             {
               "title": "用户管理",
-              "href": "page/welcome-2.html",
+              "href": "/user",
               "icon": "fa fa-users",
               "target": "_self"
             },

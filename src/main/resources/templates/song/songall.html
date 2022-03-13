@@ -50,6 +50,7 @@
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="playerstop"> 播放暂停 </button>
             </div>
         </script>
 
@@ -59,7 +60,7 @@
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
-
+        <audio id="mp3play" hidden="hidden" ></audio>
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.6.3/layui.js}" charset="utf-8"></script>
@@ -68,6 +69,14 @@
     function refresh(){
         $("#btn-reset").click()
         $("#btn-search").click()
+    }
+
+    function playmp3(that){
+        // console.log(that)
+        var player = $("#mp3play")[0]
+        player.src=that.getAttribute('songurl')
+        player.pause()
+        player.play()
     }
 
     layui.use(['form', 'table'], function () {
@@ -91,10 +100,11 @@
                     {field: 'pic', width: 110, title: '头像', templet:function(d){
                             if(d.pic==null)
                                 return "<img src='img/58dfb25b762643.jpg' width='60px' height='60px' class='layui-circle'/> <button type='button' οnclick='updateHeadPic()' class='layui-btn layui-btn-xs'>上传图片</button>"
-                            return "<div><img id='headPic' src=http://127.0.0.1:8888"+d.pic+" width='60px' height='60px' class='layui-circle'/> <br> <button imgid="+d.pic+" songid="+d.songId+" type='button' id='updateCoverPic' class='layui-btn layui-btn-xs'>上传封面</button></div>";
+                            return "<div><img id='headPic' onclick='playmp3(this)' songurl="+d.url+" src="+d.pic+" width='60px' height='60px' class='layui-circle'/> <br> <button imgid="+d.pic+" songid="+d.songId+" type='button' id='updateCoverPic' class='layui-btn layui-btn-xs'>上传封面</button></div>";
                         }},
                     {field: 'songId', width: 100, title: 'ID', sort: true},
                     {field: 'songName', width: 150, title: '歌曲名'},
+                    {field: 'singerName', width: 150, title: '歌手名'},
                     {field: 'information', width: 150, title: '专辑'},
                     {field: 'lyrics', width: 400, title: '歌词'},
                     {title: '操作', minWidth: 80, toolbar: '#currentTableBar', align: "center"}
@@ -170,6 +180,18 @@
                     })
                     layer.close(index);
                 });
+            } else if(obj.event === 'playerstop'){
+                var player = $("#mp3play")[0]
+                // console.log(player.paused)
+                // alert(player.src)
+                // console.log(player.src == '')
+                if (player.src == ''){
+                    return false
+                } else if (!player.paused){
+                    player.pause()
+                    return false
+                }
+                player.play()
             }
         });
 

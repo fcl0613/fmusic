@@ -14,6 +14,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //首页轮播图资源路径
+        registry.addResourceHandler("/img/banner/**")
+                .addResourceLocations("file:" + System.getProperty("user.dir") +
+                        System.getProperty("file.separator") + "img" +
+                        System.getProperty("file.separator") + "banner");
+
         //歌曲图资源路径
         registry.addResourceHandler("/img/singerPic/**")
                 .addResourceLocations("file:" + System.getProperty("user.dir") +
@@ -57,8 +63,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("**")
+                .allowedOriginPatterns("*")
                 .allowedMethods("*")
+                .allowedHeaders("*")
                 .allowCredentials(true);
     }
 }

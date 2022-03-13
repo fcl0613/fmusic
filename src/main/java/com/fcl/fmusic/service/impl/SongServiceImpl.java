@@ -3,6 +3,7 @@ package com.fcl.fmusic.service.impl;
 import com.fcl.fmusic.entity.Song;
 import com.fcl.fmusic.mapper.SongMapper;
 import com.fcl.fmusic.service.SongService;
+import com.fcl.fmusic.vo.SongVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +50,10 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public PageInfo<Song> selectAll(Integer pageNum, Integer pageSize, String songName, String singerName) {
+    public PageInfo<SongVo> selectAll(Integer pageNum, Integer pageSize, String songName, String singerName) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Song> songs = songMapper.selectAll("%"+songName+"%", "%"+singerName+"%");
-        PageInfo<Song> pageInfo = new PageInfo<>(songs);
+        List<SongVo> songs = songMapper.selectAll("%"+songName+"%", "%"+singerName+"%");
+        PageInfo<SongVo> pageInfo = new PageInfo<>(songs);
         return pageInfo;
     }
 }
